@@ -1,58 +1,53 @@
 import React, { Component } from 'react';
 import GazeButton from 'react-vr-gaze-button';
-import { View, Text, Pano, AppRegistry, asset, StyleSheet, VrButton, Animated } from 'react-vr';
+import { View, Text, Pano, AppRegistry, asset, StyleSheet, VrButton } from 'react-vr';
 import Timer from './Timer';
 import levels from './levels.json';
 import Button from './Button.js';
 
-
 class WorldTour extends Component{
 constructor(){
   super();
-  this.renderTimer = this.renderTimer.bind(this);
-  this.handleClick = this.handleClick.bind(this);
+
   this.state={
     deviceConnected: false,
     showMenu: false,
     levels,
-    start: false,
-    fadeAnim: new Animated.Value(0)
+    elapsed: 0,
+    timer:30
   }
+  this.startTimer = this.startTimer.bind(this);
+
+}
+startTimer(){
+  let x = this.state.timer
+  if(x <= 0){
+    this.setState({timer: 30})
+    this.state.elapsed +=1
+  } else{
+    x -= 1
+      this.setState({timer: x})
+  }
+
+    }
+
+startGame(){
+    // this is an intial timer for the game
+  setInterval(this.startTimer,1000)
 }
 
 toggleMenu(){
   this.setState({showMenu: !this.state.showMenu})
 }
 
-componentDidMount(){
-  Animated.timing(
-    this.state.fadeAnim,
-    {toValue: 1}
-  ).start();
-}
-
-renderTimer(){
-  return(
-      <Timer start={Date.now()} />
-  );
-}
-
-handleClick(){
-
-  this.setState({start : true})
-
-}
-
   render(){
-    const renderCountdown =this.state.start ? this.renderTimer() : null;
      return (
-
-      <Animated.View style={{opacity: this.state.fadeAnim}}>
+      <View>
         <Pano source= {asset(this.state.levels[0].image)}></Pano>
-        { renderCountdown}
+        <Timer {...this.state} start={Date.now()} />
+      <Button startGame={this.startGame.bind(this)} {...this.state} audio={this.state.levels[0].audio}
 
-      <Button audio={this.state.levels[0].audio}
-          startTimer={this.handleClick}/>
+         />
         <View style={styles.menuButton}
           onEnter={() => this.toggleMenu()}
           >
@@ -76,7 +71,7 @@ handleClick(){
 
           </View>
 
-      </Animated.View>
+      </View>
     )
   }
 };
