@@ -14,6 +14,7 @@ function init(bundle, parent, options) {
         ],
         cursorVisibility: 'visible',
       });
+    
       // Begin the animation loop
       vr.start();
       return vr;

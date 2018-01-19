@@ -16,7 +16,7 @@ constructor(){
     showMenu: false,
     levels,
     elapsed: 0,
-    timer:5,
+    timer: 5,
     imageVar: 0,
     intervalId: '',
     fadeAnim: new Animated.Value(1)
@@ -24,9 +24,11 @@ constructor(){
   this.startTimer = this.startTimer.bind(this);
 }
 
+
+
 startTimer(){
   let x = this.state.timer
-  if(x <= 0){
+  if(x === 0){
     Animated.timing(
       this.state.fadeAnim,
       {toValue: 0}
@@ -34,10 +36,9 @@ startTimer(){
 
     //don't mutate state, use setState
     this.state.elapsed +=1;
+    // this.setState({intervalId: ''});
+   return this.setState({timer: 5, imageVar: this.state.elapsed});
 
-    this.setState({intervalId: ''});
-
-    return this.setState({timer: 5, imageVar: this.state.elapsed});
 
   } else{
     x -= 1
@@ -47,11 +48,15 @@ startTimer(){
 
 startGame(){
     // this is an intial timer for the game
-//setInterval(this.startTimer,1000);
-
-  var intervalId = setInterval(this.startTimer, 1000);
-   // store intervalId in the state so it can be accessed later:
-  this.setState({intervalId: intervalId});
+setInterval(this.startTimer,1000);
+// setTimeout(this.startTimer,2000);
+// setTimeout(this.startTimer,3000);
+// setTimeout(this.startTimer,4000);
+// setTimeout(this.startTimer,5000);
+// setTimeout(this.startTimer,6000);
+  // var intervalId = setInterval(this.startTimer, 1000);
+  //  // store intervalId in the state so it can be accessed later:
+  // this.setState({intervalId: intervalId});
 }
 
 toggleMenu(){
