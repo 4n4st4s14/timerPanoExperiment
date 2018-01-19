@@ -40,13 +40,26 @@ toggleMenu(){
   this.setState({showMenu: !this.state.showMenu})
 }
 
+renderTimer(){
+  return(
+      <Timer start={Date.now()} />
+  );
+}
+
+handleClick(){
+ renderTimer();
+}
+
   render(){
+    const renderTimer=this.renderTimer();
      return (
+
       <View>
         <Pano source= {asset(this.state.levels[0].image)}></Pano>
-        <Timer start={Date.now()} />
+        { renderTimer }
+
       <Button audio={this.state.levels[0].audio}
-          startTimer={()=> game.startGame()}/>
+          startTimer={this.handleClick}/>
         <View style={styles.menuButton}
           onEnter={() => this.toggleMenu()}
           >
