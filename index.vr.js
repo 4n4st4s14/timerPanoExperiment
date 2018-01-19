@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import GazeButton from 'react-vr-gaze-button';
-import { View, Text, Pano, AppRegistry, asset, StyleSheet, VrButton } from 'react-vr';
+import { View, Text, Pano, AppRegistry, asset, StyleSheet, VrButton, Animated } from 'react-vr';
 import Timer from './Timer';
 import levels from './levels.json';
 import Button from './Button.js';
@@ -14,7 +14,8 @@ constructor(){
     showMenu: false,
     levels,
     elapsed: 0,
-    timer:30
+    timer:5,
+    fadeAnim: new Animated.Value(1)
   }
   this.startTimer = this.startTimer.bind(this);
 
@@ -22,8 +23,14 @@ constructor(){
 startTimer(){
   let x = this.state.timer
   if(x <= 0){
-    this.setState({timer: 30})
+    Animated.timing(
+      this.state.fadeAnim,
+      {toValue: 0}
+    ).start();
+
+    return this.setState({timer: 30})
     this.state.elapsed +=1
+  
   } else{
     x -= 1
       this.setState({timer: x})
@@ -42,7 +49,7 @@ toggleMenu(){
 
   render(){
      return (
-      <View>
+      <Animated.View style={{opacity: this.state.fadeAnim}}>
         <Pano source= {asset(this.state.levels[0].image)}></Pano>
         <Timer {...this.state} start={Date.now()} />
       <Button startGame={this.startGame.bind(this)} {...this.state} audio={this.state.levels[0].audio}
@@ -71,7 +78,7 @@ toggleMenu(){
 
           </View>
 
-      </View>
+      </Animated.View>
     )
   }
 };
