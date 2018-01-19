@@ -5,6 +5,8 @@ import Timer from './Timer';
 import levels from './levels.json';
 import Button from './Button.js';
 
+
+
 class WorldTour extends Component{
 constructor(){
   super();
@@ -15,11 +17,13 @@ constructor(){
     levels,
     elapsed: 0,
     timer:5,
+    imageVar: 0,
+    intervalId: '',
     fadeAnim: new Animated.Value(1)
   }
   this.startTimer = this.startTimer.bind(this);
-
 }
+
 startTimer(){
   let x = this.state.timer
   if(x <= 0){
@@ -28,19 +32,26 @@ startTimer(){
       {toValue: 0}
     ).start();
 
-    return this.setState({timer: 30})
-    this.state.elapsed +=1
-  
+    //don't mutate state, use setState
+    this.state.elapsed +=1;
+
+    this.setState({intervalId: ''});
+
+    return this.setState({timer: 5, imageVar: this.state.elapsed});
+
   } else{
     x -= 1
-      this.setState({timer: x})
+    this.setState({timer: x})
   }
-
     }
 
 startGame(){
     // this is an intial timer for the game
-  setInterval(this.startTimer,1000)
+//setInterval(this.startTimer,1000);
+
+  var intervalId = setInterval(this.startTimer, 1000);
+   // store intervalId in the state so it can be accessed later:
+  this.setState({intervalId: intervalId});
 }
 
 toggleMenu(){
@@ -50,8 +61,8 @@ toggleMenu(){
   render(){
      return (
       <Animated.View style={{opacity: this.state.fadeAnim}}>
-        <Pano source= {asset(this.state.levels[0].image)}></Pano>
-        <Timer {...this.state} start={Date.now()} />
+        <Pano source= {asset(this.state.levels[this.state.imageVar].image)}></Pano>
+        <Timer {...this.state} />
       <Button startGame={this.startGame.bind(this)} {...this.state} audio={this.state.levels[0].audio}
 
          />
