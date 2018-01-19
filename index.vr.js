@@ -5,36 +5,19 @@ import Timer from './Timer';
 import levels from './levels.json';
 import Button from './Button.js';
 
-const game = {
-    counter:5,
-    countdown(){
-            game.counter--
-            console.log(game.counter)
-            if(game.counter == 0){
-                console.log('Game Over')
-                // reset
-                game.counter = 5
-            }
-        },
-        startGame(){
-            // this is an intial timer for the game
-            timer = setInterval(game.countdown,1000)
-        }
-}
 
 class WorldTour extends Component{
 constructor(){
   super();
-
+  this.renderTimer = this.renderTimer.bind(this);
+  this.handleClick = this.handleClick.bind(this);
   this.state={
     deviceConnected: false,
     showMenu: false,
     levels,
-    elapsed: 0
+    start: false
   }
-
 }
-
 
 toggleMenu(){
   this.setState({showMenu: !this.state.showMenu})
@@ -47,16 +30,18 @@ renderTimer(){
 }
 
 handleClick(){
- renderTimer();
+
+  this.setState({start : true})
+
 }
 
   render(){
-    const renderTimer=this.renderTimer();
+    const renderCountdown =this.state.start ? this.renderTimer() : null;
      return (
 
       <View>
         <Pano source= {asset(this.state.levels[0].image)}></Pano>
-        { renderTimer }
+        { renderCountdown}
 
       <Button audio={this.state.levels[0].audio}
           startTimer={this.handleClick}/>
