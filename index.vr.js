@@ -4,7 +4,7 @@ import { View, Text, Pano, AppRegistry, asset, StyleSheet, VrButton, Animated } 
 import Timer from './Timer';
 import levels from './levels.json';
 import Button from './Button.js';
-
+import Countdown from './Countdown.js';
 
 
 class WorldTour extends Component{
@@ -19,12 +19,23 @@ constructor(){
     timer: 5,
     imageVar: 0,
     intervalId: '',
+    status: '',
     fadeAnim: new Animated.Value(1)
   }
   this.startTimer = this.startTimer.bind(this);
 }
 
+componentDidUpdate(){
 
+switch (this.state.status) {
+      case 'started':
+        this.timer;
+        break;
+      case 'stopped':
+      clearInterval(this.timer);
+        break;
+}
+}
 
 startTimer(){
   let x = this.state.timer
@@ -37,7 +48,11 @@ startTimer(){
     //don't mutate state, use setState
     this.state.elapsed +=1;
     // this.setState({intervalId: ''});
-   return this.setState({timer: 5, imageVar: this.state.elapsed});
+    Animated.timing(
+      this.state.fadeAnim,
+      {toValue: 1}
+    ).start();
+   return this.setState({status: 'stopped', imageVar: this.state.elapsed});
 
 
   } else{
@@ -48,12 +63,9 @@ startTimer(){
 
 startGame(){
     // this is an intial timer for the game
-setInterval(this.startTimer,1000);
-// setTimeout(this.startTimer,2000);
-// setTimeout(this.startTimer,3000);
-// setTimeout(this.startTimer,4000);
-// setTimeout(this.startTimer,5000);
-// setTimeout(this.startTimer,6000);
+this.timer = setInterval(this.startTimer,1000);
+this.setState({status: 'started'})
+
   // var intervalId = setInterval(this.startTimer, 1000);
   //  // store intervalId in the state so it can be accessed later:
   // this.setState({intervalId: intervalId});
